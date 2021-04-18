@@ -71,7 +71,7 @@ $conn->close();
 							<a href="#oPages" data-toggle="collapse" class="collapsed"><i class="lnr lnr-file-empty"></i> <span>Orders</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
 							<div id="oPages" class="collapse ">
 								<ul class="nav">
-									<li><a href="" class="">+ Add Orders</a></li>
+									<li><a href="order.php" class="">+ Add Orders</a></li>
 									<li><a href="" class="">Manage Orders</a></li>	
 								</ul>
 							</div>

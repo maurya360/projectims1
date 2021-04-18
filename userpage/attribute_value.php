@@ -108,8 +108,8 @@ $conn->close();
 							<a href="#pPages" data-toggle="collapse" class="collapsed"><i class="lnr lnr-file-empty"></i> <span>Products</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
 							<div id="pPages" class="collapse ">
 								<ul class="nav">
-									<li><a href="" class="">+ Add Products</a></li>
-									<li><a href="" class="">Manage Products</a></li>	
+									<li><a href="addproduct.php" class="">+ Add Products</a></li>
+									<li><a href="productmange.php" class="">Manage Products</a></li>	
 								</ul>
 							</div>
 						</li>
@@ -118,7 +118,7 @@ $conn->close();
 							<a href="#oPages" data-toggle="collapse" class="collapsed"><i class="lnr lnr-file-empty"></i> <span>Orders</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
 							<div id="oPages" class="collapse ">
 								<ul class="nav">
-									<li><a href="" class="">+ Add Orders</a></li>
+									<li><a href="order.php" class="">+ Add Orders</a></li>
 									<li><a href="" class="">Manage Orders</a></li>	
 								</ul>
 							</div>
@@ -174,8 +174,8 @@ $conn->close();
 									
 									<th>" .$row['attribute_value_name']."</th>
 										<td>
-										<a href='/' data-toggle='modal' data-target='#exampleModal1_".$row['id']."' id=".$row['id']." class='btn btn-primary'>EDIT</a>
-										<a href='/' data-toggle='modal' data-target='#deleteModal2_".$row['id']."' id=".$row['id']." class='btn btn-danger'>DELETE</a>
+										<a  data-toggle='modal' data-target='#exampleModal1_".$row['id']."' id=".$row['id']." class='btn btn-primary'>EDIT</a>
+										<a  data-toggle='modal' data-target='#deleteModal2_".$row['id']."' id=".$row['id']." class='btn btn-danger'>DELETE</a>
 										</td>
 								</tr>";
 								include('attribute_value_edit_del_modal.php');

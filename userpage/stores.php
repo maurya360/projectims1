@@ -172,8 +172,8 @@ $conn->close();
 									<th>" .$row['store_name']."</th>
 									<th>". $row['available']."</th>
 										<td>
-										<a href='/' data-toggle='modal' data-target='#exampleModal1_".$row['id']."' id=".$row['id']." class='btn btn-primary'>EDIT</a>
-										<a href='/' data-toggle='modal' data-target='#exampleModal2_".$row['id']."' id=".$row['id']." class='btn btn-danger'>DELETE</a>
+										<a  data-toggle='modal' data-target='#exampleModal1_".$row['id']."' id=".$row['id']." class='btn btn-primary'>EDIT</a>
+										<a  data-toggle='modal' data-target='#exampleModal2_".$row['id']."' id=".$row['id']." class='btn btn-danger'>DELETE</a>
 										</td>
 								</tr>";
 								include('store_edit_del_modal.php');

@@ -175,8 +175,8 @@ $conn->close();
 									<th>". $row['available']."</th>
 										<td>
 										<a href='attribute_value.php?attribute_name=".$row['attribute_name']."'  class='btn btn-success'>+Add Value</a>
-										<a href='/' data-toggle='modal' data-target='#exampleModal1_".$row['id']."' id=".$row['id']." class='btn btn-primary'>EDIT</a>
-										<a href='/' data-toggle='modal' data-target='#exampleModal2_".$row['id']."' id=".$row['id']." class='btn btn-danger'>DELETE</a>
+										<a  data-toggle='modal' data-target='#exampleModal1_".$row['id']."' id=".$row['id']." class='btn btn-primary'>EDIT</a>
+										<a  data-toggle='modal' data-target='#exampleModal2_".$row['id']."' id=".$row['id']." class='btn btn-danger'>DELETE</a>
 										</td>
 								</tr>
 								";

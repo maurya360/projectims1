@@ -174,8 +174,8 @@ $conn->close();
 									
 									<th>" .$row['attribute_value_name']."</th>
 										<td>
-										<a href='/' data-toggle='modal' data-target='#exampleModal1_".$row['id']."' id=".$row['id']." class='btn btn-primary'>EDIT</a>
-										<a href='/' data-toggle='modal' data-target='#deleteModal2_".$row['id']."' id=".$row['id']." class='btn btn-danger'>DELETE</a>
+										<a  data-toggle='modal' data-target='#exampleModal1_".$row['id']."' id=".$row['id']." class='btn btn-primary'>EDIT</a>
+										<a  data-toggle='modal' data-target='#deleteModal2_".$row['id']."' id=".$row['id']." class='btn btn-danger'>DELETE</a>
 										</td>
 								</tr>";
 								include('attribute_value_edit_del_modal.php');

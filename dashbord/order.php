@@ -1,3 +1,83 @@
+<!-- insert table1 -->
+<?php
+if(isset($_POST['insert'])) {
+	include 'include/db.php';
+	// table1 value
+	$bill_no = 'BILPR-'.strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 4));
+	$customer_name = (!empty($_POST['customer_name'])) ? $_POST['customer_name']: '';
+	$customer_address = (!empty($_POST['customer_address'])) ? $_POST['customer_address']: '';
+	$customer_phone = (!empty($_POST['customer_phone'])) ? $_POST['customer_phone']: '';
+	$gross_amt = (!empty($_POST['gross_amount_value'])) ? $_POST['gross_amount_value']: '';
+	$s_charge = (!empty($_POST['service_charge_value'])) ? $_POST['service_charge_value']: '';
+	$v_charge = (!empty($_POST['vat_charge_value'])) ? $_POST['vat_charge_value']: '';
+	$discount = (!empty($_POST['discount'])) ? $_POST['discount']: '';
+	$net_amt = (!empty($_POST['net_amount_value'])) ? $_POST['net_amount_value']: '';
+	$paid_status = (!empty($_POST['paid_status'])) ? $_POST['paid_status']: '';
+	$date_time = strtotime(date('Y-m-d h:i:s a'));
+
+// table 1 query
+			$sql = "INSERT INTO orders (bill_no, customer_name, customer_phone, customer_address, date_time, gross_amt, service_charge, vat_charge, discount, net_amount, paid_status)
+			VALUES ('$bill_no', '$customer_name', '$customer_phone','$customer_address','$date_time','$gross_amt','$s_charge','$v_charge','$discount','$net_amt', '$paid_status')";
+
+			if ($conn->query($sql) === TRUE) {
+			echo "New record created successfully";
+			
+				$query = "SELECT id FROM orders WHERE bill_no='$bill_no' ";
+				$res = mysqli_query($conn, $query);
+				$row = mysqli_fetch_array($res);
+				$id=$row[0];
+				// $row = mysqli_num_rows($query_run);
+				// print_r($row);
+				echo $id;
+			} else {
+			echo "Error: " . $sql . "<br>" . $conn->error;
+			}
+	
+	
+	// table2 varible
+	// $product_name = (!empty($_POST['product_name'])) ? $_POST['product_name']: '';
+	 $count=(!empty($_POST['count'])) ? $_POST['count']: '';
+	// $product_name1= implode(",",$product_name);
+	// print_r($product_name1);
+	$product_name=array();
+	$qty=array();
+	$rate=array();
+	$amount=array();
+
+	
+
+	for($i=1;$i<=$count;$i++)
+	{
+		// echo($_POST['qty'.$i]);	
+		array_push($product_name,$_POST['product'.$i]);
+		array_push($qty,$_POST['qty'.$i]);
+		array_push($rate,$_POST['rate'.$i]);
+		array_push($amount,$_POST['amount'.$i]);
+	}
+	
+	print_r($product_name);
+	print_r($qty);
+	print_r($rate);
+	print_r($amount);
+
+	
+		for($j=0;$j<$count;$j++)
+		{
+			$sql = "INSERT INTO order_items (order_id, product_name, qty, rate, amount)
+			VALUES ('$id','$product_name[$j]','$qty[$j]','$rate[$j]','$amount[$j]')";
+
+			if ($conn->query($sql) === TRUE) {
+			echo "New record created successfully";
+			} else {
+			echo "Error: " . $sql . "<br>" . $conn->error;
+			}
+		}	
+$conn->close();
+}
+
+?>
+
+
 <!doctype html>
 <html lang="en">
 	<?php include 'partial/head.php'?>
@@ -5,7 +85,7 @@
 	<!-- WRAPPER -->
 	<div id="wrapper">
 		<!-- NAVBAR -->
-			<?php include 'partial/nav.php'?>
+		
 		<!-- END NAVBAR -->
 		<!-- LEFT SIDEBAR -->
 		<div id="sidebar-nav" class="sidebar">
@@ -59,7 +139,7 @@
 							<div id="oPages" class="collapse ">
 								<ul class="nav">
 									<li><a href="order.php" class="">+ Add Orders</a></li>
-									<li><a href="" class="">Manage Orders</a></li>	
+									<li><a href="order_manage.php" class="">Manage Orders</a></li>	
 								</ul>
 							</div>
 						</li>
@@ -139,7 +219,7 @@
 														<input type="text" class="form-control" id="customer_address" name="customer_address" placeholder="Enter Customer Address" autocomplete="off">
 														</div>
 													</div>
-
+													<input type="hidden" name="count" value="0" id="count" class="count">
 													<div class="form-group">
 														<label for="gross_amount" class="col-sm-5 control-label" style="text-align:left;">Customer Phone</label>
 														<div class="col-sm-7">
@@ -159,42 +239,10 @@
 														<th style="width:20%">Amount</th>
 														<th style="width:10%"><button type="button" id="add_row" class="btn btn-default"><i class="fa fa-plus"></i></button></th>
 														</tr>
-													</thead>
 
 													<tbody>
-														<tr id="row_1">
-														<td>
-															<select class="form-control select_group product" data-row-id="row_1" id="product_1" name="product[]" style="width:100%;" onchange="getProductData(1)" required>
-																<option value="">~~select~~</option>
-																<?php
-																		include 'include/db.php';
-																		//database show webpage
-																		$query = "SELECT * FROM addproduct";
-																		$result = $conn->query($query);
-																		while($row = $result->fetch_assoc())
-																		{
-																		echo
-																		"	
-																	<option value='".$row['product_name']."' >".$row['product_name']."</option>		
-																		";
-																		}
-																				
-																?>
-															
-															</select>
-															</td>
-															<td><input type="text" name="qty[]" id="qty_1" class="form-control" required onkeyup="getTotal(1)" autocomplete="off" ></td>
-															<td>
-															<input type="text" name="rate[]" id="rate_1" class="form-control" disabled autocomplete="off">
-															<input type="hidden" name="rate_value[]" id="rate_value_1" class="form-control" autocomplete="off">
-															</td>
-															<td>
-															<input type="text" name="amount[]" id="amount_1" class="form-control" disabled autocomplete="off">
-															<input type="hidden" name="amount_value[]" id="amount_value_1" class="form-control" autocomplete="off">
-															</td>
-															<td><button type="button" class="btn btn-default" onclick="removeRow('1')"><i class="fa fa-close"></i></button></td>
-														</tr>
-													</tbody>
+														
+													</tbody> 
 													</table>
 
 													<br /> <br/>
@@ -208,21 +256,21 @@
 														<input type="hidden" class="form-control" id="gross_amount_value" name="gross_amount_value" autocomplete="off">
 														</div>
 													</div>
-																		<div class="form-group">
+													<div class="form-group">
 														<label for="service_charge" class="col-sm-5 control-label">S-Charge 13 %</label>
 														<div class="col-sm-7">
 														<input type="text" class="form-control" id="service_charge" name="service_charge" disabled autocomplete="off">
 														<input type="hidden" class="form-control" id="service_charge_value" name="service_charge_value" autocomplete="off">
 														</div>
 													</div>
-																						<div class="form-group">
+													<div class="form-group">
 														<label for="vat_charge" class="col-sm-5 control-label">Vat 10 %</label>
 														<div class="col-sm-7">
 														<input type="text" class="form-control" id="vat_charge" name="vat_charge" disabled autocomplete="off">
 														<input type="hidden" class="form-control" id="vat_charge_value" name="vat_charge_value" autocomplete="off">
 														</div>
 													</div>
-																		<div class="form-group">
+													<div class="form-group">
 														<label for="discount" class="col-sm-5 control-label">Discount</label>
 														<div class="col-sm-7">
 														<input type="text" class="form-control" id="discount" name="discount" placeholder="Discount" onkeyup="subAmount()" autocomplete="off">
@@ -236,6 +284,16 @@
 														</div>
 													</div>
 
+													<div class="form-group">
+														<label for="paid_status" class="col-sm-5 control-label">Paid Status</label>
+														<div class="col-sm-7">
+														<select type="text" class="form-control" id="paid_status" name="paid_status">
+															<option value="paid">Paid</option>
+															<option value="unpaid">Unpaid</option>
+														</select>
+														</div>
+													</div>
+
 													</div>
 												</div>
 												<!-- /.box-body -->
@@ -243,8 +301,8 @@
 												<div class="box-footer">
 													<input type="hidden" name="service_charge_rate" value="13" autocomplete="off">
 													<input type="hidden" name="vat_charge_rate" value="10" autocomplete="off">
-													<button type="submit" class="btn btn-primary">Create Order</button>
-													<a href="" class="btn btn-warning">Back</a>
+													<button type="submit" id="insert" name="insert" class="btn btn-primary">Create Order</button>
+													<a href="order_manage.php" class="btn btn-warning">Back</a>
 												</div>
 												</form>
 											<!-- /.box-body -->
@@ -304,7 +362,7 @@
       var table = $("#product_info_table");
       var count_table_tbody_tr = $("#product_info_table tbody tr").length;
       var row_id = count_table_tbody_tr + 1;
-
+	  $("#count").val(row_id);
       $.ajax({
 	
           url: 'order_helper.php',
@@ -315,7 +373,7 @@
                console.log(response);
                var html = '<tr id="row_'+row_id+'">'+
                    '<td>'+ 
-                    '<select class="form-control select_group product" data-row-id="'+row_id+'" id="product_'+row_id+'" name="product[]" style="width:100%;" onchange="getProductData('+row_id+')">'+
+                    '<select class="form-control select_group product" data-row-id="'+row_id+'" id="product_'+row_id+'" name="product'+row_id+'" style="width:100%;" onchange="getProductData('+row_id+')">'+
                         '<option value=""></option>';
                         $.each(response, function(index, value) {
                           html += '<option value="'+value.product_name+'">'+value.product_name+'</option>'; 
@@ -324,9 +382,9 @@
   
                       html += '</select>'+
                     '</td>'+ 
-                    '<td><input type="number" name="qty[]" id="qty_'+row_id+'" class="form-control" onkeyup="getTotal('+row_id+')"></td>'+
-                    '<td><input type="text" name="rate[]" id="rate_'+row_id+'" class="form-control" disabled><input type="hidden" name="rate_value[]" id="rate_value_'+row_id+'" class="form-control"></td>'+
-                    '<td><input type="text" name="amount[]" id="amount_'+row_id+'" class="form-control" disabled><input type="hidden" name="amount_value[]" id="amount_value_'+row_id+'" class="form-control"></td>'+
+                    '<td><input type="text" name="qty'+row_id+'" id="qty_'+row_id+'" class="form-control" onkeyup="getTotal('+row_id+')"></td>'+
+                    '<td><input type="text" name="rate_'+row_id+'" id="rate_'+row_id+'" class="form-control" disabled><input type="hidden" name="rate'+row_id+'" id="rate_value_'+row_id+'" class="form-control"></td>'+
+                    '<td><input type="text" name="amount_'+row_id+'" id="amount_'+row_id+'" class="form-control" disabled><input type="hidden" name="amount'+row_id+'" id="amount_value_'+row_id+'" class="form-control"></td>'+
                     '<td><button type="button" class="btn btn-default" onclick="removeRow(\''+row_id+'\')"><i class="fa fa-close"></i></button></td>'+
                     '</tr>';
 
@@ -364,7 +422,8 @@
   // get the product information from the server
   function getProductData(row_id)
   {
-    var product_id = $("#product_"+row_id).val();    
+    var product_id = $("#product_"+row_id).val();
+	console.log(product_id) ;   
     if(product_id == "") {
       $("#rate_"+row_id).val("");
       $("#rate_value_"+row_id).val("");
@@ -376,20 +435,20 @@
 
     } else {
       $.ajax({
-        url: base_url + 'orders/getProductValueById',
+        url:'order_helper1.php',
         type: 'post',
         data: {product_id : product_id},
         dataType: 'json',
         success:function(response) {
           // setting the rate value into the rate input field
-          
-          $("#rate_"+row_id).val(response.price);
-          $("#rate_value_"+row_id).val(response.price);
+          console.log(response)
+          $("#rate_"+row_id).val(response[0].price);
+          $("#rate_value_"+row_id).val(response[0].price);
 
           $("#qty_"+row_id).val(1);
           $("#qty_value_"+row_id).val(1);
 
-          var total = Number(response.price) * 1;
+          var total = Number(response[0].price) * 1;
           total = total.toFixed(2);
           $("#amount_"+row_id).val(total);
           $("#amount_value_"+row_id).val(total);
@@ -458,8 +517,9 @@
     $("#product_info_table tbody tr#row_"+tr_id).remove();
     subAmount();
   }
-</script>
 
+  
+</script>
 
 
 
